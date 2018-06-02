@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "893572276113",
+    "firebase_url": "https://dogsproject-956f4.firebaseio.com",
+    "project_id": "dogsproject-956f4",
+    "storage_bucket": "dogsproject-956f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893572276113:android:04a3d51807eb6e6f",
+        "android_client_info": {
+          "package_name": "com.example.tomer.dogsproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893572276113-4tq5knbrogd2r5iku978uqu40t0bd4bn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tomer.dogsproject",
+            "certificate_hash": "cb30bb18b49bd690d1ebbf827250ddb5b35515af"
+          }
+        },
+        {
+          "client_id": "893572276113-79u62bn5vlteg68s1s56p16v57q3u67t.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "893572276113-79u62bn5vlteg68s1s56p16v57q3u67t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmifghK0_0lOcSc8cd3ap6i7QLzmRkUBs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893572276113-79u62bn5vlteg68s1s56p16v57q3u67t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
