@@ -1,8 +1,11 @@
 package com.example.tomer.dogsproject;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,7 +55,32 @@ public class MyDogsActivity extends AppCompatActivity {
                         ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         });
-        Model.instance.getMyDogs(new DoneListener());
+        DogViewModel viewModel = ViewModelProviders.of(this).get(DogViewModel.class);
+        viewModel.getMyDogs().observe(this, new Observer<List<Dog>>() {
+            @Override
+            public void onChanged(@Nullable final List<Dog> dogs) {
+                // Update the cached copy of the words in the adapter.
+                if (dogs != null) {
+                    if (!dogs.isEmpty()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DogsAdapter adapter = new DogsAdapter(dogs, MyDogsActivity.this, new DogClickListener());
+                                binding.dogsRecycler.setAdapter(adapter);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.dogsRecycler.setAdapter(null);
+                            }
+                        });
+                    }
+                }
+                Loading.stopLoading();
+            }
+        });
     }
 
     private class AddDogListener implements View.OnClickListener {

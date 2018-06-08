@@ -2,6 +2,8 @@ package com.example.tomer.dogsproject;
 
 import android.*;
 import android.Manifest;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -9,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -46,12 +49,6 @@ public class AllDogsActivity extends AppCompatActivity {
         super.onStart();
         DogsApp.setContext(getApplicationContext());
         Loading.startLoading(this);
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                Model.instance.deleteAllDogs();
-//            }
-//        });
         checkPermissions();
         initAllDogs();
         checkForLogin();
@@ -79,7 +76,32 @@ public class AllDogsActivity extends AppCompatActivity {
                         ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         });
-        Model.instance.getAllDogs(new DoneListener());
+        DogViewModel viewModel = ViewModelProviders.of(this).get(DogViewModel.class);
+        viewModel.getAllDogs().observe(this, new Observer<List<Dog>>() {
+            @Override
+            public void onChanged(@Nullable final List<Dog> dogs) {
+                // Update the cached copy of the words in the adapter.
+                if (dogs != null) {
+                    if (!dogs.isEmpty()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DogsAdapter adapter = new DogsAdapter(dogs, AllDogsActivity.this, new DogClickListener());
+                                binding.dogsRecycler.setAdapter(adapter);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.dogsRecycler.setAdapter(null);
+                            }
+                        });
+                    }
+                }
+                Loading.stopLoading();
+            }
+        });
     }
 
     private void checkForLogin() {
@@ -175,31 +197,6 @@ public class AllDogsActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
         } else {
             finish();
-        }
-    }
-
-    private class DoneListener implements Model.DogsDoneListener {
-        @Override
-        public void onDogsLoaded(final List<Dog> dogs) {
-            if (dogs != null) {
-                if (!dogs.isEmpty()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            DogsAdapter adapter = new DogsAdapter(dogs, AllDogsActivity.this, new DogClickListener());
-                            binding.dogsRecycler.setAdapter(adapter);
-                        }
-                    });
-                } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            binding.dogsRecycler.setAdapter(null);
-                        }
-                    });
-                }
-            }
-            Loading.stopLoading();
         }
     }
 }
